@@ -26,7 +26,7 @@ This script retrieves information on trusted documents for Microsoft Office stor
 
 ### Usage
 ```powershell
-PS> powershell -ExecutionPolicy Bypass Get-TrustedDocuments.ps1
+PS> powershell -ExecutionPolicy Bypass .\Get-TrustedDocuments.ps1
 [[-DocumentType] <String>] [-EditingEnabledOnly] [-ContentEnabledOnly]
 [[-User] <String>] [[-HiveFilePath] <String>] [<CommonParameters>]
 ```
@@ -42,10 +42,10 @@ If this parameter is specified, this script will display only information on doc
 If this parameter is specified, this script will display only information on documents that content (macro) is enabled.
 
 - User  
-Specifies the user. If both this parameter and HiveFilePath are not specified, this script will display information for the current user. Administrator privilege is required to use this parameter to display information for another user.
+Specifies the user. If both this parameter and the `HiveFilePath` parameter are not specified, this script will display information for the current user. Administrator privilege is required to use this parameter to display information for another user.
 
 - HiveFilePath  
-Specifies the path of an offline registry hive file (NTUSER.DAT file extracted from another computer) to display information. If this parameter is not specified, this script uses the HKEY_CURRENT_USER registry hive of the current user. Administrator privilege is required to use this parameter because this script temporarily loads the offline registry hive file into the "HKEY_USERS\PS-TrustedDocuments" registry key.
+Specifies the path of an offline registry hive file (NTUSER.DAT file extracted from another computer) to display information. If both this parameter and the `User` parameter are not specified, this script uses the HKEY_CURRENT_USER registry hive of the current user. Administrator privilege is required to use this parameter because this script temporarily loads the offline registry hive file into the `HKEY_USERS\PS-TrustedDocuments` registry key.
 
 ### Examples
 ```powershell
