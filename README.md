@@ -97,7 +97,7 @@ I got great insight of undocumented data structure and timestamp calculation of 
 - [MS Office File Format Sorcery](https://troopers.de/downloads/troopers19/TROOPERS19_AR_MS_Office_file_format_sorcery.pdf) by Pieter Ceelen & Stan Hegt
 
 ## Author
-Nobutaka Mantani (Twitter: @nmantani)
+Nobutaka Mantani (Twitter: [@nmantani](https://twitter.com/nmantani))
 
 ## License
 The BSD 2-Clause License (http://opensource.org/licenses/bsd-license.php)
