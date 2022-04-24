@@ -12,7 +12,7 @@ Information on trusted documents is stored in the Windows registry and it contai
 - File path
 - Status (editing enabled or content (macro) enabled)
 - File creation timestamp
-- Status change timestamp (the last edit or execution of the macro)
+- Status change timestamp (the last edit of the document or execution of the macro)
 - Timezone offset
 
 Information on trusted documents is useful for incident response relating to malicious Microsoft Office documents by checking when and in which Microsoft Office document file a malicious macro was executed. So I created Get-TrustedDocuments.ps1 that is a PowerShell script to display information on trusted documents. I would create other PowerShell scripts to modify or remove information on trusted documents in the future.

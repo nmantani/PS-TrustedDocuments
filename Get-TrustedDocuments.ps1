@@ -32,7 +32,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 Displays information on trusted documents for Microsoft Office stored in the Windows registry.
 
 .DESCRIPTION
-Retrieves information on trusted documents for Microsoft Office stored under the "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office\[version]\[document type]\Security\Trusted Documents" registry keys. This script displays the status of trusted documents (editing enabled or content (macro) enabled), file creation timestamp, and status change timestamp (the last edit or execution of the macro, the time resolution of the status change timestamp is minutes). This script is useful for incident response relating to malicious Microsoft Office documents by checking when and in which Microsoft Office document file a malicious macro was executed.
+Retrieves information on trusted documents for Microsoft Office stored under the "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office\[version]\[document type]\Security\Trusted Documents" registry keys. This script displays the status of trusted documents (editing enabled or content (macro) enabled), file creation timestamp, and status change timestamp (the last edit of the document or execution of the macro, the time resolution of the status change timestamp is minutes). This script is useful for incident response relating to malicious Microsoft Office documents by checking when and in which Microsoft Office document file a malicious macro was executed.
 
 .PARAMETER DocumentType
 Specifies the document type such as Word, Excel, and PowerPoint. Only information on the specified document type will be displayed. This parameter is case insensitive.
