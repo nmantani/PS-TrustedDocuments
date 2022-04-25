@@ -166,13 +166,28 @@ function set_regpath_prefix($path, $user) {
     return $regpath_prefix
 }
 
+function show_no_information_message($path, $user) {
+    if ($path -eq "") {
+        if ($user -ne "") {
+            Write-Host "There is no information on trusted documents for user $user."
+        } else {
+            Write-Host "There is no information on trusted documents for user $env:USERNAME."
+        }
+    } else {
+        Write-Host "There is no information on trusted documents in $path."
+        unload_hivefile
+    }
+}
+
 function bytes_to_status_change_filetime($bytes) {
-    [bigint]$timestamp_unix = [System.BitConverter]::ToUint32($bytes,16) # offset 16-19
+    [UInt64]$timestamp_unix = [System.BitConverter]::ToUint32($bytes,16) # offset 16-19
 
     $multiplier = [Convert]::ToUint64("E5109EC205D7BEA7", 16)
-    $timestamp_unix = $timestamp_unix -shl (64 + 29)
-    $timestamp_unix = $timestamp_unix / $multiplier
-    $timestamp_unix = [Math]::Round([Uint64]$timestamp_unix / 10000000, [MidpointRounding]::AwayFromZero)
+
+    # This is equivalent to "$timestamp_unix = ($timestamp_unix -shl (64 + 29)) / $multiplier"
+    # The fixed value 9903520314283042199192993792 is used to support PowerShell 2.0 (Windows 7) that does not have -shl operator
+    $timestamp_unix = $timestamp_unix * (9903520314283042199192993792 / $multiplier)
+    $timestamp_unix = [Math]::Round([UInt64]$timestamp_unix / 10000000, [MidpointRounding]::AwayFromZero)
     $timestamp_filetime = ($timestamp_unix * 10000000) + 116444736000000000 # conversion from UNIXTIME to FILETIME
 
     return $timestamp_filetime
@@ -183,6 +198,11 @@ check_mutually_exclusive_options "-User" $User "-HiveFilePath" $HiveFilePath
 
 $regpath_prefix = set_regpath_prefix $HiveFilePath $User
 
+if (!(Test-Path $regpath_prefix)) {
+    show_no_information_message $HiveFilePath $User
+    exit
+}
+
 if ($DocumentType -ne "") {
     $keys = Resolve-Path "$regpath_prefix\*\$DocumentType\Security\Trusted Documents"
 } else {
@@ -190,16 +210,7 @@ if ($DocumentType -ne "") {
 }
 
 if ($null -eq $keys) {
-    if ($HiveFilePath -eq "") {
-        if ($User -ne "") {
-            Write-Host "There is no information on trusted documents for user $User."
-        } else {
-            Write-Host "There is no information on trusted documents for user $env:USERNAME."
-        }
-    } else {
-        Write-Host "There is no information on trusted documents in $HiveFilePath."
-        unload_hivefile
-    }
+    show_no_information_message $HiveFilePath $User
     exit
 }
 
@@ -209,6 +220,10 @@ Add-Type -AssemblyName System.Web
 $count = 0
 foreach ($k in $keys) {
     $item = Get-ChildItem $k
+
+    if ($null -eq $item) {
+        continue
+    }
 
     foreach ($p in $item.Property) {
         $path = [System.Web.HttpUtility]::UrlDecode($p)
@@ -277,7 +292,9 @@ foreach ($k in $keys) {
 
     # This is necessary to unload the offline registry hive file
     if ($HiveFilePath -ne "" -and $null -ne $item) {
-        $item.dispose()
+        if ([Version] $PSVersionTable.PSVersion -gt "2.0") {
+            $item.dispose()
+        }
         $item.close()
     }
 }
