@@ -104,7 +104,7 @@ Param(
 
 function check_mutually_exclusive_options($name_a, $value_a, $name_b, $value_b) {
     if ($value_a -and $value_b) {
-        Write-Host "Error: $name_a and $name_b cannot be used at the same time."
+        Write-Output "Error: $name_a and $name_b cannot be used at the same time."
         exit
     }
 }
@@ -114,7 +114,7 @@ function check_privilege {
     $is_admin = $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 
     if (!$is_admin) {
-        Write-Host "Error: administrator privilege is required."
+        Write-Output "Error: administrator privilege is required."
         exit
     }
 }
@@ -123,11 +123,11 @@ function load_hivefile($path) {
     if (Test-Path $path) {
         $ret = reg load HKU\PS-TrustedDocuments $path
         if ($null -eq $ret) {
-            Write-Host "Error: failed to load $path."
+            Write-Output "Error: failed to load $path."
             exit
         }
     } else {
-        Write-Host "Error: $path is not found."
+        Write-Output "Error: $path is not found."
         exit
     }
 }
@@ -154,7 +154,7 @@ function set_regpath_prefix($path, $user) {
         }
 
         if ($null -eq $sid) {
-            Write-Host "Error: user $user not found."
+            Write-Output "Error: user $user not found."
             exit
         } else {
             $regpath_prefix = "Registry::HKU\$sid\SOFTWARE\Microsoft\Office"
@@ -169,12 +169,12 @@ function set_regpath_prefix($path, $user) {
 function show_no_information_message($path, $user) {
     if ($path -eq "") {
         if ($user -ne "") {
-            Write-Host "There is no information on trusted documents for user $user."
+            Write-Output "There is no information on trusted documents for user $user."
         } else {
-            Write-Host "There is no information on trusted documents for user $env:USERNAME."
+            Write-Output "There is no information on trusted documents for user $env:USERNAME."
         }
     } else {
-        Write-Host "There is no information on trusted documents in $path."
+        Write-Output "There is no information on trusted documents in $path."
         unload_hivefile
     }
 }
@@ -242,16 +242,16 @@ foreach ($k in $keys) {
 
         if ($editing_enabled -and -not $ContentEnabledOnly) {
             if ($count -gt 0) {
-                Write-Host
+                Write-Output ""
             }
-            Write-Host "File path: $path"
-            Write-Host "Status: editing enabled"
+            Write-Output "File path: $path"
+            Write-Output "Status: editing enabled"
         } elseif ($content_enabled -and -not $EditingEnabledOnly) {
             if ($count -gt 0) {
-                Write-Host
+                Write-Output ""
             }
-            Write-Host "File path: $path"
-            Write-Host "Status: content (macro) enabled"
+            Write-Output "File path: $path"
+            Write-Output "Status: content (macro) enabled"
         }
 
         $timezone_offset = [System.BitConverter]::Toint64($bytes,8) # offset 8-15
@@ -260,12 +260,12 @@ foreach ($k in $keys) {
 
         if (($editing_enabled -and -not $ContentEnabledOnly) `
             -or ($content_enabled -and -not $EditingEnabledOnly)) {
-            Write-Host "File creation timestamp (UTC): $creation_timestamp_utc"
+            Write-Output "File creation timestamp (UTC): $creation_timestamp_utc"
             if ($timezone_offset_hour -ne 0) {
                 if ($timezone_offset_hour -gt 0) {
-                    Write-Host "File creation timestamp (localtime, UTC+${timezone_offset_hour}): $creation_timestamp_local"
+                    Write-Output "File creation timestamp (localtime, UTC+${timezone_offset_hour}): $creation_timestamp_local"
                 } else {
-                    Write-Host "File creation timestamp (localtime, UTC${timezone_offset_hour}): $creation_timestamp_local"
+                    Write-Output "File creation timestamp (localtime, UTC${timezone_offset_hour}): $creation_timestamp_local"
                 }
             }
         }
@@ -276,13 +276,13 @@ foreach ($k in $keys) {
 
         if (($editing_enabled -and -not $ContentEnabledOnly) `
             -or ($content_enabled -and -not $EditingEnabledOnly)) {
-            Write-Host "Status change timestamp (UTC): $status_timestamp_utc"
+            Write-Output "Status change timestamp (UTC): $status_timestamp_utc"
 
             if ($timezone_offset_hour -ne 0) {
                 if ($timezone_offset_hour -gt 0) {
-                    Write-Host "Status change timestamp (localtime, UTC+${timezone_offset_hour}): $status_timestamp_local"
+                    Write-Output "Status change timestamp (localtime, UTC+${timezone_offset_hour}): $status_timestamp_local"
                 } else {
-                    Write-Host "Status change timestamp (localtime, UTC${timezone_offset_hour}): $status_timestamp_local"
+                    Write-Output "Status change timestamp (localtime, UTC${timezone_offset_hour}): $status_timestamp_local"
                 }
             }
 
