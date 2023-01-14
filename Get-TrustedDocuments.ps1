@@ -218,11 +218,14 @@ if ($null -eq $keys) {
 Add-Type -AssemblyName System.Web
 
 $count = 0
+$not_found = $true
 foreach ($k in $keys) {
     $item = Get-ChildItem $k
 
     if ($null -eq $item) {
         continue
+    } else {
+        $not_found = $false
     }
 
     foreach ($p in $item.Property) {
@@ -297,6 +300,10 @@ foreach ($k in $keys) {
         }
         $item.close()
     }
+}
+
+if ($not_found) {
+    show_no_information_message $HiveFilePath $User
 }
 
 if ($HiveFilePath -ne "") {
