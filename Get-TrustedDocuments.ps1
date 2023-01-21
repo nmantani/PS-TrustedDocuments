@@ -180,14 +180,8 @@ function show_no_information_message($path, $user) {
 }
 
 function bytes_to_status_change_filetime($bytes) {
-    [UInt64]$timestamp_unix = [System.BitConverter]::ToUint32($bytes,16) # offset 16-19
-
-    $multiplier = [Convert]::ToUint64("E5109EC205D7BEA7", 16)
-
-    # This is equivalent to "$timestamp_unix = ($timestamp_unix -shl (64 + 29)) / $multiplier"
-    # The fixed value 9903520314283042199192993792 is used to support PowerShell 2.0 (Windows 7) that does not have -shl operator
-    $timestamp_unix = $timestamp_unix * (9903520314283042199192993792 / $multiplier)
-    $timestamp_unix = [Math]::Round([UInt64]$timestamp_unix / 10000000, [MidpointRounding]::AwayFromZero)
+    [UInt64]$timestamp_unix_min = [System.BitConverter]::ToUint32($bytes,16) # offset 16-19
+    $timestamp_unix = $timestamp_unix_min * 60
     $timestamp_filetime = ($timestamp_unix * 10000000) + 116444736000000000 # conversion from UNIXTIME to FILETIME
 
     return $timestamp_filetime
