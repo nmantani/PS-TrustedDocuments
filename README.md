@@ -1,5 +1,7 @@
 # PS-TrustedDocuments: PowerShell script to handle information on trusted documents for Microsoft Office
 
+English | [Japanese](README.ja.md)
+
 ![screenshot.png](images/screenshot.png)
 
 [Trusted documents](https://support.microsoft.com/en-us/office/trusted-documents-cf872bd8-47ec-4c02-baa5-1fdba1a11b53) are Microsoft Office document files that have been marked as trusted by enabling active content (such as macro) in them. A document file is marked as trusted when a user clicks the "Enable Editing" button or the "Enable Content" button in the following message bars.
